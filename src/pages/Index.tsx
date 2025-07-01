@@ -61,6 +61,126 @@ const Index = () => {
       tags: ["방송", "시청자게임", "재미"],
       isNewbie: false,
       type: "private"
+    },
+    {
+      id: 4,
+      title: "캐주얼 게임 함께해요",
+      game: "lol",
+      host: "이민수",
+      mannerScore: 4.6,
+      members: 4,
+      maxMembers: 5,
+      tags: ["캐주얼", "재미", "친목"],
+      isNewbie: false,
+      type: "public"
+    },
+    {
+      id: 5,
+      title: "발로란트 경쟁전 파티",
+      game: "valorant",
+      host: "정수진",
+      mannerScore: 4.9,
+      members: 2,
+      maxMembers: 5,
+      tags: ["경쟁전", "매너", "랭크"],
+      isNewbie: false,
+      type: "public"
+    },
+    {
+      id: 6,
+      title: "오버워치 초보자 모집",
+      game: "overwatch",
+      host: "김태현",
+      mannerScore: 4.5,
+      members: 1,
+      maxMembers: 6,
+      tags: ["초보환영", "학습", "친목"],
+      isNewbie: true,
+      type: "public"
+    },
+    {
+      id: 7,
+      title: "에이펙스 랭크 올리기",
+      game: "apex",
+      host: "박소영",
+      mannerScore: 4.8,
+      members: 2,
+      maxMembers: 3,
+      tags: ["랭크", "매너", "실력"],
+      isNewbie: false,
+      type: "public"
+    },
+    {
+      id: 8,
+      title: "스팀 협동 게임 파티",
+      game: "steam",
+      host: "최준호",
+      mannerScore: 4.4,
+      members: 3,
+      maxMembers: 4,
+      tags: ["협동", "재미", "친목"],
+      isNewbie: false,
+      type: "public"
+    },
+    {
+      id: 9,
+      title: "[비밀방] 친구들과 내전",
+      game: "lol",
+      host: "한지우",
+      mannerScore: 4.7,
+      members: 8,
+      maxMembers: 10,
+      tags: ["내전", "친목", "재미"],
+      isNewbie: false,
+      type: "private"
+    },
+    {
+      id: 10,
+      title: "모바일 게임 파티",
+      game: "other",
+      host: "조민지",
+      mannerScore: 4.6,
+      members: 2,
+      maxMembers: 4,
+      tags: ["모바일", "캐주얼", "재미"],
+      isNewbie: false,
+      type: "public"
+    },
+    {
+      id: 11,
+      title: "새벽 랭크 파티",
+      game: "valorant",
+      host: "서동민",
+      mannerScore: 4.9,
+      members: 1,
+      maxMembers: 5,
+      tags: ["새벽", "랭크", "매너"],
+      isNewbie: false,
+      type: "public"
+    },
+    {
+      id: 12,
+      title: "초보자 튜토리얼 파티",
+      game: "overwatch",
+      host: "윤서현",
+      mannerScore: 4.8,
+      members: 3,
+      maxMembers: 6,
+      tags: ["초보환영", "튜토리얼", "학습"],
+      isNewbie: true,
+      type: "public"
+    },
+    {
+      id: 13,
+      title: "에이펙스 캐주얼 게임",
+      game: "apex",
+      host: "강민성",
+      mannerScore: 4.3,
+      members: 1,
+      maxMembers: 3,
+      tags: ["캐주얼", "재미", "친목"],
+      isNewbie: false,
+      type: "public"
     }
   ];
 
@@ -244,11 +364,6 @@ const Index = () => {
 
                     {/* Tags */}
                     <div className="flex flex-wrap gap-2">
-                      {room.isNewbie && (
-                        <Badge className="bg-green-500 hover:bg-green-600 text-white">
-                          초보환영
-                        </Badge>
-                      )}
                       {room.tags.map((tag, index) => (
                         <Badge key={index} variant="secondary" className="bg-gray-100 text-gray-700 hover:bg-gray-200">
                           {tag}

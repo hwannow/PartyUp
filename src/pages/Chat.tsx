@@ -98,6 +98,10 @@ const Chat = () => {
     }
   };
 
+  const handleProfileClick = (username: string) => {
+    navigate(`/profile/${username}`);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -139,13 +143,18 @@ const Chat = () => {
               <div>
                 <p className="text-sm text-gray-600">호스트</p>
                 <div className="flex items-center space-x-2 mt-1">
-                  <Avatar className="h-6 w-6">
+                  <Avatar className="h-6 w-6 cursor-pointer" onClick={() => handleProfileClick(partyInfo.host)}>
                     <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${partyInfo.host}`} />
                     <AvatarFallback className="bg-green-500 text-white text-xs">
                       {partyInfo.host[0]}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="text-sm font-medium text-gray-900">{partyInfo.host}</span>
+                  <span 
+                    className="text-sm font-medium text-gray-900 cursor-pointer hover:text-green-600" 
+                    onClick={() => handleProfileClick(partyInfo.host)}
+                  >
+                    {partyInfo.host}
+                  </span>
                   <Badge className="bg-yellow-100 text-yellow-800 text-xs">호스트</Badge>
                 </div>
               </div>
@@ -165,18 +174,28 @@ const Chat = () => {
                 <p className="text-sm text-gray-600">참여자</p>
                 <div className="space-y-2 mt-1">
                   <div className="flex items-center space-x-2">
-                    <Avatar className="h-6 w-6">
+                    <Avatar className="h-6 w-6 cursor-pointer" onClick={() => handleProfileClick("이민수")}>
                       <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=이민수`} />
                       <AvatarFallback className="bg-blue-500 text-white text-xs">이</AvatarFallback>
                     </Avatar>
-                    <span className="text-sm text-gray-900">이민수</span>
+                    <span 
+                      className="text-sm text-gray-900 cursor-pointer hover:text-green-600" 
+                      onClick={() => handleProfileClick("이민수")}
+                    >
+                      이민수
+                    </span>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <Avatar className="h-6 w-6">
+                    <Avatar className="h-6 w-6 cursor-pointer" onClick={() => handleProfileClick("박서연")}>
                       <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=박서연`} />
                       <AvatarFallback className="bg-purple-500 text-white text-xs">박</AvatarFallback>
                     </Avatar>
-                    <span className="text-sm text-gray-900">박서연</span>
+                    <span 
+                      className="text-sm text-gray-900 cursor-pointer hover:text-green-600" 
+                      onClick={() => handleProfileClick("박서연")}
+                    >
+                      박서연
+                    </span>
                   </div>
                 </div>
               </div>
@@ -195,7 +214,7 @@ const Chat = () => {
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               {messages.map((msg) => (
                 <div key={msg.id} className="flex items-start space-x-3">
-                  <Avatar className="h-8 w-8">
+                  <Avatar className="h-8 w-8 cursor-pointer" onClick={() => handleProfileClick(msg.username)}>
                     <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${msg.username}`} />
                     <AvatarFallback className="bg-gray-500 text-white text-xs">
                       {msg.username[0]}
@@ -203,7 +222,12 @@ const Chat = () => {
                   </Avatar>
                   <div className="flex-1">
                     <div className="flex items-center space-x-2 mb-1">
-                      <span className="text-sm font-medium text-gray-900">{msg.username}</span>
+                      <span 
+                        className="text-sm font-medium text-gray-900 cursor-pointer hover:text-green-600" 
+                        onClick={() => handleProfileClick(msg.username)}
+                      >
+                        {msg.username}
+                      </span>
                       {msg.isHost && (
                         <Badge className="bg-yellow-100 text-yellow-800 text-xs">호스트</Badge>
                       )}
