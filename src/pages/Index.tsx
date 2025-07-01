@@ -1,17 +1,20 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Star, Users, Shield, Search, Filter, Plus, Crown } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Star, Users, Shield, Search, Plus, Lock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 const Index = () => {
   const navigate = useNavigate();
   const [selectedGame, setSelectedGame] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
+  const [password, setPassword] = useState("");
+  const [selectedPartyId, setSelectedPartyId] = useState<number | null>(null);
+  const [isPasswordDialogOpen, setIsPasswordDialogOpen] = useState(false);
 
   const games = [
     { id: "lol", name: "리그 오브 레전드", icon: "🎮", color: "bg-blue-500" },
@@ -68,8 +71,29 @@ const Index = () => {
     return matchesGame && matchesSearch;
   });
 
-  const handleJoinParty = (partyId: number) => {
-    navigate(`/chat/${partyId}`);
+  const handleJoinParty = (partyId: number, isPrivate: boolean) => {
+    if (isPrivate) {
+      setSelectedPartyId(partyId);
+      setIsPasswordDialogOpen(true);
+    } else {
+      navigate(`/chat/${partyId}`);
+    }
+  };
+
+  const handlePasswordSubmit = () => {
+    if (password === "1234") {
+      setIsPasswordDialogOpen(false);
+      setPassword("");
+      if (selectedPartyId) {
+        navigate(`/chat/${selectedPartyId}`);
+      }
+    } else {
+      alert("비밀번호가 틀렸습니다.");
+    }
+  };
+
+  const handleProfileClick = (hostName: string) => {
+    navigate(`/profile/${hostName}`);
   };
 
   return (
@@ -159,7 +183,7 @@ const Index = () => {
             ))}
           </div>
 
-          {/* Search and Filter */}
+          {/* Search */}
           <div className="flex justify-center space-x-4 mb-8">
             <div className="relative flex-1 max-w-md">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
@@ -171,9 +195,12 @@ const Index = () => {
                 className="pl-10 bg-white border-gray-300 text-gray-900 placeholder:text-gray-400"
               />
             </div>
-            <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-50">
-              <Filter className="h-4 w-4 mr-2" />
-              필터
+            <Button 
+              variant="outline" 
+              className="bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-white border-0"
+            >
+              <Search className="h-4 w-4 mr-2" />
+              검색
             </Button>
           </div>
 
@@ -192,7 +219,7 @@ const Index = () => {
                       </CardDescription>
                     </div>
                     {room.type === "private" && (
-                      <Crown className="h-5 w-5 text-yellow-500" />
+                      <Lock className="h-5 w-5 text-gray-500" />
                     )}
                   </div>
                 </CardHeader>
@@ -200,14 +227,14 @@ const Index = () => {
                   <div className="space-y-4">
                     {/* Host Info */}
                     <div className="flex items-center space-x-3">
-                      <Avatar className="h-8 w-8">
+                      <Avatar className="h-8 w-8 cursor-pointer" onClick={() => handleProfileClick(room.host)}>
                         <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${room.host}`} />
                         <AvatarFallback className="bg-green-500 text-white text-xs">
                           {room.host[0]}
                         </AvatarFallback>
                       </Avatar>
                       <div className="flex-1">
-                        <p className="text-sm font-medium text-gray-900">{room.host}</p>
+                        <p className="text-sm font-medium text-gray-900 cursor-pointer" onClick={() => handleProfileClick(room.host)}>{room.host}</p>
                       </div>
                       <div className="flex items-center space-x-1">
                         <Star className="h-4 w-4 text-yellow-500 fill-current" />
@@ -239,7 +266,7 @@ const Index = () => {
                       </div>
                       <Button 
                         size="sm" 
-                        onClick={() => handleJoinParty(room.id)}
+                        onClick={() => handleJoinParty(room.id, room.type === "private")}
                         className="bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700"
                       >
                         참여하기
@@ -305,6 +332,35 @@ const Index = () => {
           </p>
         </div>
       </footer>
+
+      {/* Password Dialog */}
+      <Dialog open={isPasswordDialogOpen} onOpenChange={setIsPasswordDialogOpen}>
+        <DialogContent className="bg-white">
+          <DialogHeader>
+            <DialogTitle className="text-gray-900">비밀방 입장</DialogTitle>
+            <DialogDescription className="text-gray-600">
+              이 파티는 비밀방입니다. 비밀번호를 입력해주세요.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <Input
+              type="password"
+              placeholder="비밀번호를 입력하세요"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="bg-white border-gray-300 text-gray-900"
+            />
+          </div>
+          <DialogFooter>
+            <Button 
+              onClick={handlePasswordSubmit}
+              className="bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700"
+            >
+              입장하기
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
