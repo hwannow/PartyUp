@@ -33,62 +33,62 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
       <div className="w-full max-w-md p-4">
-        <Card className="bg-slate-800 border-slate-700">
+        <Card className="bg-white border-gray-200 shadow-lg">
           <CardHeader>
             <div className="flex items-center space-x-3 mb-4">
               <Button 
                 variant="ghost" 
                 size="icon"
                 onClick={() => navigate("/")}
-                className="text-slate-300 hover:bg-slate-700"
+                className="text-gray-600 hover:bg-gray-100"
               >
                 <ArrowLeft className="h-5 w-5" />
               </Button>
-              <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-gradient-to-r from-green-400 to-green-600 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold">P</span>
               </div>
             </div>
-            <CardTitle className="text-white text-2xl">로그인</CardTitle>
-            <CardDescription className="text-slate-400">
+            <CardTitle className="text-gray-900 text-2xl">로그인</CardTitle>
+            <CardDescription className="text-gray-600">
               PartyUp에 오신 것을 환영합니다
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-white">아이디</label>
+              <label className="text-sm font-medium text-gray-900">아이디</label>
               <Input
                 value={formData.userId}
                 onChange={(e) => handleInputChange("userId", e.target.value)}
                 placeholder="아이디를 입력하세요"
-                className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400"
+                className="bg-white border-gray-300 text-gray-900 placeholder:text-gray-400"
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-white">비밀번호</label>
+              <label className="text-sm font-medium text-gray-900">비밀번호</label>
               <Input
                 type="password"
                 value={formData.password}
                 onChange={(e) => handleInputChange("password", e.target.value)}
                 placeholder="비밀번호를 입력하세요"
-                className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400"
+                className="bg-white border-gray-300 text-gray-900 placeholder:text-gray-400"
               />
             </div>
 
             <Button 
               onClick={handleLogin}
-              className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+              className="w-full bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700"
             >
               로그인
             </Button>
 
-            <div className="text-center text-sm text-slate-400">
+            <div className="text-center text-sm text-gray-600">
               계정이 없으신가요?{" "}
               <button 
                 onClick={() => navigate("/signup")}
-                className="text-purple-400 hover:text-purple-300 underline"
+                className="text-green-600 hover:text-green-500 underline"
               >
                 회원가입
               </button>

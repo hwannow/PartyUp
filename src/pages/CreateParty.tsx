@@ -22,13 +22,15 @@ const CreateParty = () => {
     { id: "valorant", name: "발로란트" },
     { id: "overwatch", name: "오버워치" },
     { id: "apex", name: "에이펙스" },
+    { id: "steam", name: "스팀" },
+    { id: "other", name: "기타" },
   ];
 
   const options = [
-    { id: "rank", name: "랭크", color: "bg-blue-600" },
-    { id: "newbie", name: "초보환영", color: "bg-green-600" },
-    { id: "manner", name: "매너", color: "bg-purple-600" },
-    { id: "fun", name: "재미", color: "bg-orange-600" },
+    { id: "rank", name: "랭크", color: "bg-blue-500" },
+    { id: "newbie", name: "초보환영", color: "bg-green-500" },
+    { id: "manner", name: "매너", color: "bg-purple-500" },
+    { id: "fun", name: "재미", color: "bg-orange-500" },
   ];
 
   const toggleOption = (optionId: string) => {
@@ -59,20 +61,20 @@ const CreateParty = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header className="border-b border-slate-700 bg-slate-900/80 backdrop-blur-sm">
+      <header className="border-b border-gray-200 bg-white shadow-sm">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center space-x-4">
             <Button 
               variant="ghost" 
               onClick={() => navigate("/")}
-              className="text-slate-300 hover:bg-slate-800"
+              className="text-gray-600 hover:bg-gray-100"
             >
               <ArrowLeft className="h-5 w-5 mr-2" />
               돌아가기
             </Button>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-green-500 to-green-700 bg-clip-text text-transparent">
               파티 만들기
             </h1>
           </div>
@@ -82,35 +84,35 @@ const CreateParty = () => {
       {/* Content */}
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto">
-          <Card className="bg-slate-800 border-slate-700">
+          <Card className="bg-white border-gray-200 shadow-sm">
             <CardHeader>
-              <CardTitle className="text-white">새 파티 생성</CardTitle>
-              <CardDescription className="text-slate-400">
+              <CardTitle className="text-gray-900">새 파티 생성</CardTitle>
+              <CardDescription className="text-gray-600">
                 파티 정보를 입력하고 함께할 게이머들을 모집해보세요
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               {/* 파티 제목 */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-white">파티 제목</label>
+                <label className="text-sm font-medium text-gray-900">파티 제목</label>
                 <Input
                   value={partyTitle}
                   onChange={(e) => setPartyTitle(e.target.value)}
                   placeholder="파티 제목을 입력하세요"
-                  className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400"
+                  className="bg-white border-gray-300 text-gray-900 placeholder:text-gray-400"
                 />
               </div>
 
               {/* 게임 선택 */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-white">게임 종류</label>
+                <label className="text-sm font-medium text-gray-900">게임 종류</label>
                 <Select value={selectedGame} onValueChange={setSelectedGame}>
-                  <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
+                  <SelectTrigger className="bg-white border-gray-300 text-gray-900">
                     <SelectValue placeholder="게임을 선택하세요" />
                   </SelectTrigger>
-                  <SelectContent className="bg-slate-700 border-slate-600">
+                  <SelectContent className="bg-white border-gray-300">
                     {games.map((game) => (
-                      <SelectItem key={game.id} value={game.id} className="text-white hover:bg-slate-600">
+                      <SelectItem key={game.id} value={game.id} className="text-gray-900 hover:bg-gray-100">
                         {game.name}
                       </SelectItem>
                     ))}
@@ -120,14 +122,14 @@ const CreateParty = () => {
 
               {/* 파티 인원 */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-white">최대 인원</label>
+                <label className="text-sm font-medium text-gray-900">최대 인원</label>
                 <Select value={maxMembers} onValueChange={setMaxMembers}>
-                  <SelectTrigger className="bg-slate-700 border-slate-600 text-white">
+                  <SelectTrigger className="bg-white border-gray-300 text-gray-900">
                     <SelectValue />
                   </SelectTrigger>
-                  <SelectContent className="bg-slate-700 border-slate-600">
+                  <SelectContent className="bg-white border-gray-300">
                     {[2, 3, 4, 5, 6].map((num) => (
-                      <SelectItem key={num} value={num.toString()} className="text-white hover:bg-slate-600">
+                      <SelectItem key={num} value={num.toString()} className="text-gray-900 hover:bg-gray-100">
                         <div className="flex items-center">
                           <Users className="h-4 w-4 mr-2" />
                           {num}명
@@ -140,15 +142,15 @@ const CreateParty = () => {
 
               {/* 옵션 선택 */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-white">파티 옵션</label>
+                <label className="text-sm font-medium text-gray-900">파티 옵션</label>
                 <div className="flex flex-wrap gap-2">
                   {options.map((option) => (
                     <Badge
                       key={option.id}
                       className={`cursor-pointer transition-all ${
                         selectedOptions.includes(option.id)
-                          ? `${option.color} hover:opacity-80`
-                          : "bg-slate-700 hover:bg-slate-600 text-slate-300"
+                          ? `${option.color} hover:opacity-80 text-white`
+                          : "bg-gray-200 hover:bg-gray-300 text-gray-700"
                       }`}
                       onClick={() => toggleOption(option.id)}
                     >
@@ -160,19 +162,19 @@ const CreateParty = () => {
 
               {/* 설명 */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-white">파티 설명 (선택사항)</label>
+                <label className="text-sm font-medium text-gray-900">파티 설명 (선택사항)</label>
                 <Textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="파티에 대한 추가 설명을 입력하세요"
-                  className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400 min-h-[100px]"
+                  className="bg-white border-gray-300 text-gray-900 placeholder:text-gray-400 min-h-[100px]"
                 />
               </div>
 
               {/* 생성 버튼 */}
               <Button 
                 onClick={handleCreateParty}
-                className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-lg py-6"
+                className="w-full bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700 text-lg py-6"
               >
                 파티 생성하기
               </Button>
