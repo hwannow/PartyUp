@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,8 +5,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Star, Users, Shield, Search, Filter, Plus, Crown } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Index = () => {
+  const navigate = useNavigate();
   const [selectedGame, setSelectedGame] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -24,11 +25,10 @@ const Index = () => {
       title: "랭크 같이 가실분~",
       game: "lol",
       host: "김은지",
-      hostRank: "골드",
       mannerScore: 4.8,
       members: 3,
       maxMembers: 5,
-      tags: ["랭크", "골드+", "매너"],
+      tags: ["랭크", "매너"],
       isNewbie: false,
       type: "public"
     },
@@ -37,7 +37,6 @@ const Index = () => {
       title: "초보자 환영! 함께 배워요",
       game: "valorant",
       host: "장은영",
-      hostRank: "아이언",
       mannerScore: 4.9,
       members: 2,
       maxMembers: 5,
@@ -50,7 +49,6 @@ const Index = () => {
       title: "[시청자 게임] 방송용 파티",
       game: "overwatch",
       host: "박지민",
-      hostRank: "다이아",
       mannerScore: 4.7,
       members: 1,
       maxMembers: 6,
@@ -82,11 +80,25 @@ const Index = () => {
               </h1>
             </div>
             <div className="flex items-center space-x-4">
-              <Button variant="outline" className="border-slate-600 text-slate-300 hover:bg-slate-800">
+              <Button 
+                variant="outline" 
+                onClick={() => navigate("/login")}
+                className="border-slate-600 text-slate-300 hover:bg-slate-800"
+              >
                 로그인
               </Button>
-              <Button className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600">
+              <Button 
+                onClick={() => navigate("/signup")}
+                className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+              >
                 회원가입
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={() => navigate("/profile")}
+                className="border-slate-600 text-slate-300 hover:bg-slate-800"
+              >
+                프로필
               </Button>
             </div>
           </div>
@@ -102,13 +114,14 @@ const Index = () => {
           <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
             혼자서도 괜찮아요! 매너 있는 게이머들과 함께 즐거운 게임을 시작해보세요
           </p>
-          <div className="flex justify-center space-x-4">
-            <Button size="lg" className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-lg px-8">
+          <div className="flex justify-center">
+            <Button 
+              size="lg" 
+              onClick={() => navigate("/create-party")}
+              className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-lg px-8"
+            >
               <Plus className="mr-2 h-5 w-5" />
               파티 만들기
-            </Button>
-            <Button size="lg" variant="outline" className="border-slate-600 text-slate-300 hover:bg-slate-800 text-lg px-8">
-              파티 찾기
             </Button>
           </div>
         </div>
@@ -178,7 +191,7 @@ const Index = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {/* Host Info */}
+                    {/* Host Info - 랭크 정보 제거 */}
                     <div className="flex items-center space-x-3">
                       <Avatar className="h-8 w-8">
                         <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${room.host}`} />
@@ -188,7 +201,6 @@ const Index = () => {
                       </Avatar>
                       <div className="flex-1">
                         <p className="text-sm font-medium text-white">{room.host}</p>
-                        <p className="text-xs text-slate-400">{room.hostRank}</p>
                       </div>
                       <div className="flex items-center space-x-1">
                         <Star className="h-4 w-4 text-yellow-500 fill-current" />
