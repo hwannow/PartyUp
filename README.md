@@ -1,73 +1,82 @@
-# Welcome to your Lovable project
+# 🎈 PartyUp 
 
-## Project info
+## 배포 주소
 
-**URL**: https://lovable.dev/projects/4400c9da-e90c-4403-b9bf-d3ad01c3dcf6
+https://lovable-game-buddies.lovable.app/
 
-## How can I edit this code?
+## 핵심 기능
 
-There are several ways of editing your application.
+| ID   | 기능명                     | 설명                                                                 |
+|------|----------------------------|----------------------------------------------------------------------|
+| F-01 | 로그인/회원가입            | 이메일 또는 소셜 로그인 기능 제공. 사용자 식별 및 개인화된 서비스 제공 |
+| F-02 | 게임 선택 및 파티방 탐색   | 사용자가 원하는 게임을 선택하면 해당 게임에 맞는 파티방 리스트를 확인 가능 |
+| F-03 | 파티방 생성                | 사용자가 직접 방을 생성하고 제목, 설명, 비공개 여부, 필터 조건 등을 설정 가능 |
+| F-04 | 파티방 필터/검색           | 게임 종류, 랭크, 모드, 초보자 여부, 매너 기준 등으로 파티방 리스트를 필터링 가능 |
+| F-05 | 사용자 프로필              | 닉네임, 매너 점수, 후기, 신고 여부, 플레이 기록 등의 정보를 제공 |
+| F-06 | 유저 차단 및 매칭 제외     | 사용자가 특정 유저를 차단하면 동일한 방에 매칭되지 않도록 처리 |
+| F-07 | 후기 및 매너 점수 시스템   | 게임 종료 후 참여자 간 매너 점수 평가 및 후기 작성 기능 제공 |
 
-**Use Lovable**
+# 👤 사용자 페르소나 
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/4400c9da-e90c-4403-b9bf-d3ad01c3dcf6) and start prompting.
+## 1️⃣ 게이머 - 김은지 🎮
+- 나이: 23세
+- 목표: 친구가 없어도 사람들과 게임을 즐기고 싶다
+- 니즈: 매너 유저 선별 기능, 랭크/레이드 맞춤형 파티 구성
 
-Changes made via Lovable will be committed automatically to this repo.
+**상황**: 혼자서도 부담 없이 함꼐할 게임 친구를 찾고 싶다
 
-**Use your preferred IDE**
+**사용자 시나리오:**
+- 친구가 없는 김은지는 게임이 하고 싶다
+- 혼자 하면 쓸쓸하므로 파티원을 구하기 위해 앱을 실행한다
+- 김은지는 플레이할 게임 종류를 선택하고, 방 리스트를 확인한다
+- 원하는 파티가 없어 새로운 방을 만든다
+- 새로운 방에서 유저들과 만나 같이 게임을 진행한다
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+**사용자 스토리:**
+> "친구가 없어도 여러 사람들과 게임을 같이 하고 싶어요"
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+**인수 조건:**
+- **Given:** 김은지가 앱에 로그인한 상태이고
+- **When:** 플레이할 게임 종류를 선택하고 파티방 리스트를 확인할 때
+- **Then:** 선택한 게임에 해당하는 파티방 리스트가 보인다
 
-Follow these steps:
+## 2️⃣ 뉴비 게이머 - 장은영 🐣
+- 나이: 20세
+- 목표: 새로운 게임에 입문하여 흥미를 붙이고 싶다
+- 니즈: 게임 콘텐츠 이해도 향상, 입문자 대상 파티 구성
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+**상황**: 다른 초보자들과 함꼐 즐기며 자연스럽게 흥미를 붙이고 싶다
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+**사용자 시나리오:**
+- 장은영은 요즘 유행하는 게임을 설치했지만, 튜토리얼 이후 무엇을 해야 할지 몰라 혼란스럽다
+- "초보자 파티" 옵션에서 비슷한 실력의 뉴비들과 파티를 맺는다
+- 파티를 통해서 실시간으로 도움을 주고 받으며 게임을 수행한다
 
-# Step 3: Install the necessary dependencies.
-npm i
+**사용자 스토리:**
+> "게임이 너무 낯설고 어렵지만, 나처럼 처음 시작한 사람들과 함께 배우고 즐기고 싶어요"
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+**인수 조건:**
+- **Given:** 장은영이 앱에 로그인한 상태이고
+- **When:** '초보자 파티' 옵션을 선택하면
+- **Then:** 비슷한 실력의 뉴비 게이머들이 참여한 파티 리스트가 보인다
 
-**Edit a file directly in GitHub**
+## 3️⃣ 스트리머 - 박지민 📺
+- 나이: 30세
+- 목표: 방송을 시청하는 시청자들과 게임을 하고 싶다
+- 니즈: 시청자 참여 기반 파티 구성, 참여 신청 관리 기능
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+**상황**: 방송 중 시청자들과 손쉽게 파티를 구성하고, 소통을 이어가며 재미있는 콘텐츠를 만들고 싶다
 
-**Use GitHub Codespaces**
+**사용자 시나리오:**
+- 박지민은 오늘 방송에서 시청자들과 함께 게임을 할 예정이다
+- 방송 시작 후 앱을 열어 비공개 파티방을 만든다
+- 시청자들은 안내된 방 이름을 통해 참여 신청 버튼을 누른다
+- 박지민은 시청자 리스트에서 유저 정보를 보고, 참여 기록이나 매너 태그를 참고해 파티원을 선정한다
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+**사용자 스토리:**
+> "방송 중에 시청자들과 쉽게 파티를 만들어 함께 게임하며 소통하고 싶어요"
 
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/4400c9da-e90c-4403-b9bf-d3ad01c3dcf6) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+**인수 조건:**
+- **Given:** 시청자들이 파티 참여 신청을 한 상태이고
+- **When:** 박지민이 앱 내 시청자 리스트를 열어볼 때
+- **Then:** 각 신청자의 매너 점수, 닉네임이 함께 표시된다
