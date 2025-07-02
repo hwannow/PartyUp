@@ -1,12 +1,12 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Send, Users } from "lucide-react";
+import { ArrowLeft, Send, Users, Check, X } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface ChatMessage {
   id: number;
@@ -19,8 +19,10 @@ interface ChatMessage {
 const Chat = () => {
   const navigate = useNavigate();
   const { partyId } = useParams();
+  const { user, isAuthenticated } = useAuth();
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [isReady, setIsReady] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // 더미 파티 정보
@@ -99,7 +101,13 @@ const Chat = () => {
   };
 
   const handleProfileClick = (username: string) => {
-    navigate(`/profile/${username}`);
+    const currentUser = user?.displayName || "나";
+    const query = `?partyId=${partyId}&host=${partyInfo.host}`;
+    navigate(`/profile/${username}${query}`);
+  };
+
+  const toggleReady = () => {
+    setIsReady(!isReady);
   };
 
   return (
@@ -173,6 +181,45 @@ const Chat = () => {
               <div>
                 <p className="text-sm text-gray-600">참여자</p>
                 <div className="space-y-2 mt-1">
+                  {/* 내 프로필 - 준비 완료 버튼과 함께 */}
+                  {isAuthenticated && (
+                    <div className="flex items-center justify-between p-2 bg-green-50 rounded">
+                      <div className="flex items-center space-x-2">
+                        <Avatar className="h-6 w-6">
+                          <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${user?.displayName}`} />
+                          <AvatarFallback className="bg-green-500 text-white text-xs">
+                            {user?.displayName?.[0]}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span className="text-sm font-medium text-gray-900">
+                          {user?.displayName} (나)
+                        </span>
+                      </div>
+                      <Button
+                        onClick={toggleReady}
+                        size="sm"
+                        className={`${
+                          isReady 
+                            ? "bg-red-500 hover:bg-red-600 text-white" 
+                            : "bg-green-500 hover:bg-green-600 text-white"
+                        }`}
+                      >
+                        {isReady ? (
+                          <>
+                            <X className="h-3 w-3 mr-1" />
+                            준비 해제
+                          </>
+                        ) : (
+                          <>
+                            <Check className="h-3 w-3 mr-1" />
+                            준비 완료
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                  )}
+                  
+                  {/* 다른 참여자들 */}
                   <div className="flex items-center space-x-2">
                     <Avatar className="h-6 w-6 cursor-pointer" onClick={() => handleProfileClick("이민수")}>
                       <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=이민수`} />

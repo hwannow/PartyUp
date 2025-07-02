@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { ArrowLeft, Users } from "lucide-react";
+import { ArrowLeft, Users, Clock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useParty } from "@/contexts/PartyContext";
@@ -22,6 +21,7 @@ const CreateParty = () => {
   const [description, setDescription] = useState("");
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [isPrivate, setIsPrivate] = useState(false);
+  const [gameStartTime, setGameStartTime] = useState("");
 
   const genres = [
     { id: "aos", name: "AOS" },
@@ -107,7 +107,8 @@ const CreateParty = () => {
       maxMembers: parseInt(maxMembers),
       tags: selectedOptionNames,
       isPrivate,
-      description
+      description,
+      gameStartTime
     });
 
     alert("파티가 생성되었습니다!");
@@ -192,6 +193,20 @@ const CreateParty = () => {
                     ))}
                   </SelectContent>
                 </Select>
+              </div>
+
+              {/* 게임 시작 시간 */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-900">게임 시작 시간</label>
+                <div className="relative">
+                  <Clock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+                  <Input
+                    type="datetime-local"
+                    value={gameStartTime}
+                    onChange={(e) => setGameStartTime(e.target.value)}
+                    className="pl-10 bg-white border-gray-300 text-gray-900"
+                  />
+                </div>
               </div>
 
               {/* 파티 인원 */}

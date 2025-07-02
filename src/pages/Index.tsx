@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -6,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Star, Users, Search, Plus, Lock, LogIn, UserPlus, User, LogOut } from "lucide-react";
+import { Star, Users, Search, Plus, Lock, LogIn, UserPlus, User, LogOut, Clock } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useParty } from "@/contexts/PartyContext";
@@ -92,6 +91,17 @@ const Index = () => {
 
   const handleCardClick = (party: any) => {
     handleJoinParty(party);
+  };
+
+  const formatGameStartTime = (timeString: string) => {
+    if (!timeString) return null;
+    const date = new Date(timeString);
+    return date.toLocaleString('ko-KR', { 
+      month: 'short', 
+      day: 'numeric', 
+      hour: '2-digit', 
+      minute: '2-digit' 
+    });
   };
 
   return (
@@ -253,6 +263,14 @@ const Index = () => {
                     <CardDescription className="text-gray-600">
                       {party.game} • {party.members}/{party.maxMembers}명
                     </CardDescription>
+                    {party.gameStartTime && (
+                      <div className="flex items-center space-x-1 mt-1">
+                        <Clock className="h-3 w-3 text-gray-500" />
+                        <span className="text-xs text-gray-500">
+                          {formatGameStartTime(party.gameStartTime)}
+                        </span>
+                      </div>
+                    )}
                   </div>
                   <div className="flex items-center space-x-1">
                     <Users className="h-4 w-4 text-gray-600" />

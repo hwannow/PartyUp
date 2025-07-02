@@ -13,11 +13,13 @@ export interface Party {
   rating: number;
   isPrivate: boolean;
   description?: string;
+  gameStartTime?: string;
 }
 
 interface PartyContextType {
   parties: Party[];
   addParty: (party: Omit<Party, 'id' | 'members' | 'rating'>) => void;
+  kickMember: (partyId: string, username: string) => void;
 }
 
 const PartyContext = createContext<PartyContextType | undefined>(undefined);
@@ -206,9 +208,16 @@ export const PartyProvider: React.FC<PartyProviderProps> = ({ children }) => {
     setParties(prev => [party, ...prev]);
   };
 
+  const kickMember = (partyId: string, username: string) => {
+    console.log(`Kicking ${username} from party ${partyId}`);
+    // In a real app, this would make an API call
+    alert(`${username}님이 강제 퇴장되었습니다.`);
+  };
+
   const value = {
     parties,
-    addParty
+    addParty,
+    kickMember
   };
 
   return <PartyContext.Provider value={value}>{children}</PartyContext.Provider>;
