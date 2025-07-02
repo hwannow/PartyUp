@@ -8,23 +8,64 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { useParty } from "@/contexts/PartyContext";
 
 const CreateParty = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const { addParty } = useParty();
   const [partyTitle, setPartyTitle] = useState("");
+  const [selectedGenre, setSelectedGenre] = useState("");
   const [selectedGame, setSelectedGame] = useState("");
   const [maxMembers, setMaxMembers] = useState("5");
   const [description, setDescription] = useState("");
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+  const [isPrivate, setIsPrivate] = useState(false);
 
-  const games = [
-    { id: "lol", name: "리그 오브 레전드" },
-    { id: "valorant", name: "발로란트" },
-    { id: "overwatch", name: "오버워치" },
-    { id: "apex", name: "에이펙스" },
-    { id: "steam", name: "스팀" },
-    { id: "other", name: "기타" },
+  const genres = [
+    { id: "aos", name: "AOS" },
+    { id: "fps", name: "FPS" },
+    { id: "rpg", name: "RPG" },
+    { id: "rts", name: "RTS" },
+    { id: "sports", name: "스포츠" },
+    { id: "racing", name: "레이싱" },
+    { id: "sandbox", name: "샌드박스" },
+    { id: "party", name: "파티" },
   ];
+
+  const gamesByGenre = {
+    "aos": [
+      { id: "lol", name: "리그 오브 레전드" }
+    ],
+    "fps": [
+      { id: "valorant", name: "발로란트" },
+      { id: "pubg", name: "배틀그라운드" },
+      { id: "overwatch", name: "오버워치 2" },
+      { id: "fortnite", name: "포트나이트" }
+    ],
+    "rpg": [
+      { id: "lostark", name: "로스트아크" },
+      { id: "diablo", name: "디아블로 4" }
+    ],
+    "rts": [
+      { id: "starcraft", name: "스타크래프트 2" }
+    ],
+    "sports": [
+      { id: "fifa", name: "FIFA 온라인 4" }
+    ],
+    "racing": [
+      { id: "kartrider", name: "카트라이더 러쉬플러스" }
+    ],
+    "sandbox": [
+      { id: "minecraft", name: "마인크래프트" }
+    ],
+    "party": [
+      { id: "amongus", name: "어몽어스" }
+    ]
+  };
+
+  const availableGames = selectedGenre ? gamesByGenre[selectedGenre as keyof typeof gamesByGenre] || [] : [];
 
   const options = [
     { id: "rank", name: "랭크", color: "bg-blue-500" },
@@ -42,18 +83,31 @@ const CreateParty = () => {
   };
 
   const handleCreateParty = () => {
-    if (!partyTitle || !selectedGame) {
-      alert("파티 제목과 게임을 선택해주세요.");
+    if (!partyTitle || !selectedGenre || !selectedGame) {
+      alert("파티 제목, 장르, 게임을 모두 선택해주세요.");
       return;
     }
 
-    // TODO: 실제 파티 생성 로직 구현
-    console.log({
+    if (!user) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
+
+    const selectedGenreName = genres.find(g => g.id === selectedGenre)?.name || "";
+    const selectedGameName = availableGames.find(g => g.id === selectedGame)?.name || "";
+    const selectedOptionNames = selectedOptions.map(optionId => 
+      options.find(option => option.id === optionId)?.name || ""
+    ).filter(Boolean);
+
+    addParty({
       title: partyTitle,
-      game: selectedGame,
+      game: selectedGameName,
+      genre: selectedGenreName,
+      host: user.displayName,
       maxMembers: parseInt(maxMembers),
-      description,
-      options: selectedOptions
+      tags: selectedOptionNames,
+      isPrivate,
+      description
     });
 
     alert("파티가 생성되었습니다!");
@@ -103,15 +157,35 @@ const CreateParty = () => {
                 />
               </div>
 
+              {/* 장르 선택 */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-900">게임 장르</label>
+                <Select value={selectedGenre} onValueChange={(value) => {
+                  setSelectedGenre(value);
+                  setSelectedGame("");
+                }}>
+                  <SelectTrigger className="bg-white border-gray-300 text-gray-900">
+                    <SelectValue placeholder="장르를 선택하세요" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-white border-gray-300">
+                    {genres.map((genre) => (
+                      <SelectItem key={genre.id} value={genre.id} className="text-gray-900 hover:bg-gray-100">
+                        {genre.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
               {/* 게임 선택 */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-900">게임 종류</label>
-                <Select value={selectedGame} onValueChange={setSelectedGame}>
+                <label className="text-sm font-medium text-gray-900">게임</label>
+                <Select value={selectedGame} onValueChange={setSelectedGame} disabled={!selectedGenre}>
                   <SelectTrigger className="bg-white border-gray-300 text-gray-900">
                     <SelectValue placeholder="게임을 선택하세요" />
                   </SelectTrigger>
                   <SelectContent className="bg-white border-gray-300">
-                    {games.map((game) => (
+                    {availableGames.map((game) => (
                       <SelectItem key={game.id} value={game.id} className="text-gray-900 hover:bg-gray-100">
                         {game.name}
                       </SelectItem>
@@ -128,7 +202,7 @@ const CreateParty = () => {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent className="bg-white border-gray-300">
-                    {[2, 3, 4, 5, 6].map((num) => (
+                    {[2, 3, 4, 5, 6, 8, 10].map((num) => (
                       <SelectItem key={num} value={num.toString()} className="text-gray-900 hover:bg-gray-100">
                         <div className="flex items-center">
                           <Users className="h-4 w-4 mr-2" />
@@ -138,6 +212,21 @@ const CreateParty = () => {
                     ))}
                   </SelectContent>
                 </Select>
+              </div>
+
+              {/* 비밀방 설정 */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-900">파티 공개 설정</label>
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id="isPrivate"
+                    checked={isPrivate}
+                    onChange={(e) => setIsPrivate(e.target.checked)}
+                    className="rounded border-gray-300"
+                  />
+                  <label htmlFor="isPrivate" className="text-sm text-gray-700">비밀방으로 설정</label>
+                </div>
               </div>
 
               {/* 옵션 선택 */}

@@ -1,109 +1,48 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Star, Users, Search, Plus, Crown, Lock, LogIn, UserPlus, User, LogOut } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Star, Users, Search, Plus, Lock, LogIn, UserPlus, User, LogOut } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useParty } from "@/contexts/PartyContext";
 
-interface Party {
-  id: string;
-  title: string;
-  game: string;
-  host: string;
-  members: number;
-  maxMembers: number;
-  tags: string[];
-  rating: number;
-  isPrivate: boolean;
-}
+const genres = ["전체", "AOS", "FPS", "RPG", "RTS", "스포츠", "레이싱", "샌드박스", "파티"];
 
-const dummyParties: Party[] = [
-  {
-    id: "1",
-    title: "롤 5인 랭크",
-    game: "리그 오브 레전드",
-    host: "김은지",
-    members: 3,
-    maxMembers: 5,
-    tags: ["랭크", "5인", "듀오"],
-    rating: 4.5,
-    isPrivate: false
-  },
-  {
-    id: "2",
-    title: "발로란트 내전",
-    game: "발로란트",
-    host: "장은영",
-    members: 4,
-    maxMembers: 5,
-    tags: ["내전", "5인"],
-    rating: 4.8,
-    isPrivate: true
-  },
-  {
-    id: "3",
-    title: "배그 스쿼드",
-    game: "배틀그라운드",
-    host: "박지민",
-    members: 2,
-    maxMembers: 4,
-    tags: ["스쿼드", "배린이"],
-    rating: 4.2,
-    isPrivate: false
-  },
-  {
-    id: "4",
-    title: "오버워치 경쟁전",
-    game: "오버워치 2",
-    host: "박소영",
-    members: 2,
-    maxMembers: 5,
-    tags: ["경쟁전", "힐러"],
-    rating: 4.9,
-    isPrivate: false
-  },
-  {
-    id: "5",
-    title: "로스트아크 레이드",
-    game: "로스트아크",
-    host: "이민수",
-    members: 6,
-    maxMembers: 8,
-    tags: ["레이드", "고수"],
-    rating: 4.7,
-    isPrivate: true
-  },
-  {
-    id: "6",
-    title: "디아블로 4 쩔",
-    game: "디아블로 4",
-    host: "박서연",
-    members: 3,
-    maxMembers: 4,
-    tags: ["쩔", "고행"],
-    rating: 4.0,
-    isPrivate: false
-  }
-];
-
-const gameTypes = ["전체", "리그 오브 레전드", "발로란트", "배틀그라운드", "오버워치 2", "로스트아크", "디아블로 4"];
+const gamesByGenre = {
+  "AOS": ["리그 오브 레전드"],
+  "FPS": ["발로란트", "배틀그라운드", "오버워치 2", "포트나이트"],
+  "RPG": ["로스트아크", "디아블로 4"],
+  "RTS": ["스타크래프트 2"],
+  "스포츠": ["FIFA 온라인 4"],
+  "레이싱": ["카트라이더 러쉬플러스"],
+  "샌드박스": ["마인크래프트"],
+  "파티": ["어몽어스"]
+};
 
 const Index = () => {
   const navigate = useNavigate();
   const { user, isAuthenticated, logout } = useAuth();
+  const { parties } = useParty();
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedGenre, setSelectedGenre] = useState("전체");
   const [selectedGame, setSelectedGame] = useState("전체");
   const [passwordInput, setPasswordInput] = useState("");
-  const [selectedParty, setSelectedParty] = useState<Party | null>(null);
+  const [selectedParty, setSelectedParty] = useState<any>(null);
 
-  const filteredParties = dummyParties.filter((party) => {
+  const availableGames = selectedGenre === "전체" 
+    ? ["전체", ...Object.values(gamesByGenre).flat()]
+    : ["전체", ...(gamesByGenre[selectedGenre as keyof typeof gamesByGenre] || [])];
+
+  const filteredParties = parties.filter((party) => {
     const searchRegex = new RegExp(searchTerm, "i");
+    const genreFilter = selectedGenre === "전체" || party.genre === selectedGenre;
     const gameFilter = selectedGame === "전체" || party.game === selectedGame;
-    return searchRegex.test(party.title) && gameFilter;
+    return searchRegex.test(party.title) && genreFilter && gameFilter;
   });
 
   const handleCreateParty = () => {
@@ -115,7 +54,11 @@ const Index = () => {
     navigate("/create-party");
   };
 
-  const handleJoinParty = (party: Party) => {
+  const handleJoinParty = (party: any, event?: React.MouseEvent) => {
+    if (event) {
+      event.stopPropagation();
+    }
+    
     if (!isAuthenticated) {
       alert("파티에 참여하려면 먼저 로그인해주세요!");
       navigate("/login");
@@ -142,8 +85,13 @@ const Index = () => {
     }
   };
 
-  const handleProfileClick = (username: string) => {
+  const handleProfileClick = (username: string, event: React.MouseEvent) => {
+    event.stopPropagation();
     navigate(`/profile/${username}`);
+  };
+
+  const handleCardClick = (party: any) => {
+    handleJoinParty(party);
   };
 
   return (
@@ -240,10 +188,35 @@ const Index = () => {
           </div>
         </div>
 
+        {/* Genre Filter */}
+        <div className="mb-4">
+          <h3 className="text-sm font-medium text-gray-900 mb-2">장르</h3>
+          <div className="flex flex-wrap gap-2">
+            {genres.map((genre) => (
+              <Button
+                key={genre}
+                variant={selectedGenre === genre ? "default" : "outline"}
+                size="sm"
+                onClick={() => {
+                  setSelectedGenre(genre);
+                  setSelectedGame("전체");
+                }}
+                className={selectedGenre === genre 
+                  ? "bg-green-500 hover:bg-green-600 text-white" 
+                  : "border-gray-300 text-gray-700 hover:bg-gray-100"
+                }
+              >
+                {genre}
+              </Button>
+            ))}
+          </div>
+        </div>
+
         {/* Game Filter */}
         <div className="mb-6">
+          <h3 className="text-sm font-medium text-gray-900 mb-2">게임</h3>
           <div className="flex flex-wrap gap-2">
-            {gameTypes.map((game) => (
+            {availableGames.map((game) => (
               <Button
                 key={game}
                 variant={selectedGame === game ? "default" : "outline"}
@@ -263,7 +236,11 @@ const Index = () => {
         {/* Party List */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredParties.map((party) => (
-            <Card key={party.id} className="bg-white border-gray-200 shadow-sm hover:shadow-md transition-shadow">
+            <Card 
+              key={party.id} 
+              className="bg-white border-gray-200 shadow-sm hover:shadow-md transition-shadow cursor-pointer"
+              onClick={() => handleCardClick(party)}
+            >
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
@@ -286,7 +263,7 @@ const Index = () => {
               <CardContent>
                 <div className="space-y-4">
                   <div className="flex items-center space-x-2">
-                    <Avatar className="h-6 w-6 cursor-pointer" onClick={() => handleProfileClick(party.host)}>
+                    <Avatar className="h-6 w-6 cursor-pointer" onClick={(e) => handleProfileClick(party.host, e)}>
                       <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${party.host}`} />
                       <AvatarFallback className="bg-green-500 text-white text-xs">
                         {party.host[0]}
@@ -294,7 +271,7 @@ const Index = () => {
                     </Avatar>
                     <span 
                       className="text-sm text-gray-900 cursor-pointer hover:text-green-600" 
-                      onClick={() => handleProfileClick(party.host)}
+                      onClick={(e) => handleProfileClick(party.host, e)}
                     >
                       {party.host}
                     </span>
@@ -313,7 +290,7 @@ const Index = () => {
                   </div>
                   
                   <Button 
-                    onClick={() => handleJoinParty(party)}
+                    onClick={(e) => handleJoinParty(party, e)}
                     className="w-full bg-green-500 hover:bg-green-600 text-white"
                     disabled={party.members >= party.maxMembers}
                   >
