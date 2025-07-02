@@ -27,8 +27,7 @@ const UserProfile = () => {
     username: username,
     rating: 4.5,
     reviewCount: 123,
-    preferredGames: ["리그 오브 레전드", "발로란트", "배틀그라운드"],
-    playStyle: ["공격적", "팀워크", "전략적"]
+    preferredGames: ["리그 오브 레전드", "발로란트", "배틀그라운드"]
   };
 
   const handleDirectMessage = () => {
@@ -100,17 +99,6 @@ const UserProfile = () => {
                       {userData.preferredGames.map((game, index) => (
                         <Badge key={index} variant="secondary" className="bg-green-100 text-green-800 text-xs">
                           {game}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <h3 className="text-sm font-medium text-gray-900 mb-2">플레이 스타일</h3>
-                    <div className="flex flex-wrap gap-1">
-                      {userData.playStyle.map((style, index) => (
-                        <Badge key={index} variant="outline" className="border-gray-300 text-gray-700 text-xs">
-                          {style}
                         </Badge>
                       ))}
                     </div>

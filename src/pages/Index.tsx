@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -5,12 +6,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Star, Users, Search, Plus, Lock, LogIn, UserPlus, User, LogOut, Clock } from "lucide-react";
+import { Star, Users, Search, Plus, Lock, LogIn, UserPlus, User, LogOut, Clock, Radio } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useParty } from "@/contexts/PartyContext";
 
-const genres = ["전체", "AOS", "FPS", "RPG", "RTS", "스포츠", "레이싱", "샌드박스", "파티"];
+const genres = ["전체", "AOS", "FPS", "RPG", "RTS", "스포츠", "레이싱", "샌드박스", "파티", "기타"];
 
 const gamesByGenre = {
   "AOS": ["리그 오브 레전드"],
@@ -20,7 +21,8 @@ const gamesByGenre = {
   "스포츠": ["FIFA 온라인 4"],
   "레이싱": ["카트라이더 러쉬플러스"],
   "샌드박스": ["마인크래프트"],
-  "파티": ["어몽어스"]
+  "파티": ["어몽어스"],
+  "기타": []
 };
 
 const Index = () => {
@@ -30,18 +32,20 @@ const Index = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedGenre, setSelectedGenre] = useState("전체");
   const [selectedGame, setSelectedGame] = useState("전체");
+  const [showBroadcast, setShowBroadcast] = useState(false);
   const [passwordInput, setPasswordInput] = useState("");
   const [selectedParty, setSelectedParty] = useState<any>(null);
 
   const availableGames = selectedGenre === "전체" 
-    ? ["전체", ...Object.values(gamesByGenre).flat()]
-    : ["전체", ...(gamesByGenre[selectedGenre as keyof typeof gamesByGenre] || [])];
+    ? ["전체", ...Object.values(gamesByGenre).flat(), "기타"]
+    : ["전체", ...(gamesByGenre[selectedGenre as keyof typeof gamesByGenre] || []), "기타"];
 
   const filteredParties = parties.filter((party) => {
     const searchRegex = new RegExp(searchTerm, "i");
     const genreFilter = selectedGenre === "전체" || party.genre === selectedGenre;
     const gameFilter = selectedGame === "전체" || party.game === selectedGame;
-    return searchRegex.test(party.title) && genreFilter && gameFilter;
+    const broadcastFilter = !showBroadcast || party.tags.includes("방송");
+    return searchRegex.test(party.title) && genreFilter && gameFilter && broadcastFilter;
   });
 
   const handleCreateParty = () => {
@@ -198,6 +202,24 @@ const Index = () => {
           </div>
         </div>
 
+        {/* Broadcast Filter */}
+        <div className="mb-4">
+          <div className="flex items-center space-x-2">
+            <Button
+              variant={showBroadcast ? "default" : "outline"}
+              size="sm"
+              onClick={() => setShowBroadcast(!showBroadcast)}
+              className={showBroadcast 
+                ? "bg-red-500 hover:bg-red-600 text-white" 
+                : "border-gray-300 text-gray-700 hover:bg-gray-100"
+              }
+            >
+              <Radio className="h-4 w-4 mr-1" />
+              방송용만 보기
+            </Button>
+          </div>
+        </div>
+
         {/* Genre Filter */}
         <div className="mb-4">
           <h3 className="text-sm font-medium text-gray-900 mb-2">장르</h3>
@@ -258,6 +280,9 @@ const Index = () => {
                       <CardTitle className="text-gray-900 text-lg">{party.title}</CardTitle>
                       {party.isPrivate && (
                         <Lock className="h-4 w-4 text-gray-600" />
+                      )}
+                      {party.tags.includes("방송") && (
+                        <Radio className="h-4 w-4 text-red-500" />
                       )}
                     </div>
                     <CardDescription className="text-gray-600">

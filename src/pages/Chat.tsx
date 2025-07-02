@@ -77,11 +77,14 @@ const Chat = () => {
 
   useEffect(() => {
     setMessages(dummyMessages);
-    // 파티 멤버들 초기화 (더미 데이터)
-    setPartyMembers([
-      { username: "이민수", isReady: true },
-      { username: "박서연", isReady: false }
-    ]);
+    // 파티 멤버들 초기화 (호스트 제외)
+    const nonHostMembers = ["이민수", "박서연"].filter(name => name !== partyInfo.host);
+    setPartyMembers(
+      nonHostMembers.map(name => ({
+        username: name,
+        isReady: name === "이민수"
+      }))
+    );
   }, [partyInfo.host]);
 
   useEffect(() => {
@@ -194,8 +197,8 @@ const Chat = () => {
               <div>
                 <p className="text-sm text-gray-600">참여자</p>
                 <div className="space-y-2 mt-1">
-                  {/* 내 프로필 - 준비 완료 버튼과 함께 */}
-                  {isAuthenticated && (
+                  {/* 내 프로필 - 호스트가 아닐 때만 표시 */}
+                  {isAuthenticated && user?.displayName !== partyInfo.host && (
                     <div className="flex items-center justify-between p-2 bg-green-50 rounded">
                       <div className="flex items-center space-x-2">
                         <Avatar className="h-6 w-6">
