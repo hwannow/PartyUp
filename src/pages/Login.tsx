@@ -5,9 +5,11 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     userId: "",
     password: ""
@@ -26,8 +28,8 @@ const Login = () => {
       return;
     }
 
-    // TODO: 실제 로그인 로직 구현
-    console.log("로그인 시도:", formData);
+    // 더미 로그인 처리
+    login(formData.userId, formData.userId);
     alert("로그인되었습니다!");
     navigate("/");
   };
@@ -46,7 +48,7 @@ const Login = () => {
               >
                 <ArrowLeft className="h-5 w-5" />
               </Button>
-              <div className="w-8 h-8 bg-gradient-to-r from-green-400 to-green-600 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold">P</span>
               </div>
             </div>
@@ -79,7 +81,7 @@ const Login = () => {
 
             <Button 
               onClick={handleLogin}
-              className="w-full bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700"
+              className="w-full bg-green-500 hover:bg-green-600 text-white"
             >
               로그인
             </Button>

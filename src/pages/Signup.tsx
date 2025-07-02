@@ -5,9 +5,11 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Signup = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     userId: "",
     password: "",
@@ -33,14 +35,10 @@ const Signup = () => {
       return;
     }
 
-    // TODO: 실제 회원가입 로직 구현
-    console.log("회원가입 시도:", {
-      userId: formData.userId,
-      password: formData.password,
-      displayName: formData.displayName
-    });
+    // 더미 회원가입 처리 - 바로 로그인 상태로 만들기
+    login(formData.userId, formData.displayName);
     alert("회원가입이 완료되었습니다!");
-    navigate("/login");
+    navigate("/");
   };
 
   return (
@@ -57,7 +55,7 @@ const Signup = () => {
               >
                 <ArrowLeft className="h-5 w-5" />
               </Button>
-              <div className="w-8 h-8 bg-gradient-to-r from-green-400 to-green-600 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-green-500 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold">P</span>
               </div>
             </div>
@@ -111,7 +109,7 @@ const Signup = () => {
 
             <Button 
               onClick={handleSignup}
-              className="w-full bg-gradient-to-r from-green-400 to-green-600 hover:from-green-500 hover:to-green-700"
+              className="w-full bg-green-500 hover:bg-green-600 text-white"
             >
               회원가입
             </Button>
