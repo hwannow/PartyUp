@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Send, Users, Check, X } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useParty } from "@/contexts/PartyContext";
 
 interface ChatMessage {
   id: number;
@@ -16,21 +18,28 @@ interface ChatMessage {
   isHost?: boolean;
 }
 
+interface PartyMember {
+  username: string;
+  isReady: boolean;
+}
+
 const Chat = () => {
   const navigate = useNavigate();
   const { partyId } = useParams();
   const { user, isAuthenticated } = useAuth();
+  const { parties } = useParty();
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isReady, setIsReady] = useState(false);
+  const [partyMembers, setPartyMembers] = useState<PartyMember[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // 더미 파티 정보
-  const partyInfo = {
+  // 파티 정보 찾기
+  const partyInfo = parties.find(p => p.id === partyId) || {
     id: partyId,
     title: "랭크 같이 가실분~",
     game: "리그 오브 레전드",
-    host: "김은지",
+    host: user?.displayName || "김은지",
     members: 3,
     maxMembers: 5,
     tags: ["랭크", "매너"]
@@ -40,7 +49,7 @@ const Chat = () => {
   const dummyMessages: ChatMessage[] = [
     {
       id: 1,
-      username: "김은지",
+      username: partyInfo.host,
       message: "안녕하세요! 파티에 오신 것을 환영합니다~",
       timestamp: "14:30",
       isHost: true
@@ -59,7 +68,7 @@ const Chat = () => {
     },
     {
       id: 4,
-      username: "김은지",
+      username: partyInfo.host,
       message: "5분 후에 시작할게요! 준비 되신 분들은 댓글 남겨주세요",
       timestamp: "14:33",
       isHost: true
@@ -68,7 +77,12 @@ const Chat = () => {
 
   useEffect(() => {
     setMessages(dummyMessages);
-  }, []);
+    // 파티 멤버들 초기화 (더미 데이터)
+    setPartyMembers([
+      { username: "이민수", isReady: true },
+      { username: "박서연", isReady: false }
+    ]);
+  }, [partyInfo.host]);
 
   useEffect(() => {
     scrollToBottom();
@@ -82,7 +96,7 @@ const Chat = () => {
     if (message.trim()) {
       const newMessage: ChatMessage = {
         id: messages.length + 1,
-        username: "나",
+        username: user?.displayName || "나",
         message: message.trim(),
         timestamp: new Date().toLocaleTimeString('ko-KR', { 
           hour: '2-digit', 
@@ -101,7 +115,6 @@ const Chat = () => {
   };
 
   const handleProfileClick = (username: string) => {
-    const currentUser = user?.displayName || "나";
     const query = `?partyId=${partyId}&host=${partyInfo.host}`;
     navigate(`/profile/${username}${query}`);
   };
@@ -219,31 +232,30 @@ const Chat = () => {
                     </div>
                   )}
                   
-                  {/* 다른 참여자들 */}
-                  <div className="flex items-center space-x-2">
-                    <Avatar className="h-6 w-6 cursor-pointer" onClick={() => handleProfileClick("이민수")}>
-                      <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=이민수`} />
-                      <AvatarFallback className="bg-blue-500 text-white text-xs">이</AvatarFallback>
-                    </Avatar>
-                    <span 
-                      className="text-sm text-gray-900 cursor-pointer hover:text-green-600" 
-                      onClick={() => handleProfileClick("이민수")}
-                    >
-                      이민수
-                    </span>
-                  </div>
-                  <div className="flex items-center space-x-2">
-                    <Avatar className="h-6 w-6 cursor-pointer" onClick={() => handleProfileClick("박서연")}>
-                      <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=박서연`} />
-                      <AvatarFallback className="bg-purple-500 text-white text-xs">박</AvatarFallback>
-                    </Avatar>
-                    <span 
-                      className="text-sm text-gray-900 cursor-pointer hover:text-green-600" 
-                      onClick={() => handleProfileClick("박서연")}
-                    >
-                      박서연
-                    </span>
-                  </div>
+                  {/* 다른 참여자들 - 준비 완료 상태 표시 */}
+                  {partyMembers.map((member, index) => (
+                    <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                      <div className="flex items-center space-x-2">
+                        <Avatar className="h-6 w-6 cursor-pointer" onClick={() => handleProfileClick(member.username)}>
+                          <AvatarImage src={`https://api.dicebear.com/7.x/avataaars/svg?seed=${member.username}`} />
+                          <AvatarFallback className="bg-blue-500 text-white text-xs">
+                            {member.username[0]}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span 
+                          className="text-sm text-gray-900 cursor-pointer hover:text-green-600" 
+                          onClick={() => handleProfileClick(member.username)}
+                        >
+                          {member.username}
+                        </span>
+                      </div>
+                      {member.isReady && (
+                        <Badge className="bg-green-100 text-green-800 text-xs">
+                          준비 완료
+                        </Badge>
+                      )}
+                    </div>
+                  ))}
                 </div>
               </div>
             </CardContent>

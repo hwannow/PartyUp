@@ -32,6 +32,7 @@ const CreateParty = () => {
     { id: "racing", name: "레이싱" },
     { id: "sandbox", name: "샌드박스" },
     { id: "party", name: "파티" },
+    { id: "etc", name: "기타" },
   ];
 
   const gamesByGenre = {
@@ -62,6 +63,9 @@ const CreateParty = () => {
     ],
     "party": [
       { id: "amongus", name: "어몽어스" }
+    ],
+    "etc": [
+      { id: "etc", name: "기타" }
     ]
   };
 

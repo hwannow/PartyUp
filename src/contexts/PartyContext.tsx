@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 export interface Party {
@@ -202,7 +201,7 @@ export const PartyProvider: React.FC<PartyProviderProps> = ({ children }) => {
     const party: Party = {
       ...newParty,
       id: Date.now().toString(),
-      members: 1,
+      members: 3, // 호스트 포함 3명으로 하드코딩 (호스트 기능 확인을 위해)
       rating: 4.0
     };
     setParties(prev => [party, ...prev]);

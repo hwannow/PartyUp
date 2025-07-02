@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -29,36 +30,6 @@ const UserProfile = () => {
     preferredGames: ["리그 오브 레전드", "발로란트", "배틀그라운드"],
     playStyle: ["공격적", "팀워크", "전략적"]
   };
-
-  const stats = {
-    totalGames: 542,
-    winRate: 67,
-    avgPlayTime: 2.5,
-    partiesJoined: 32,
-    partiesHosted: 8,
-    completionRate: 89
-  };
-
-  const recentActivities = [
-    {
-      title: "롤 5인 랭크",
-      game: "리그 오브 레전드",
-      date: "2023년 12월 10일",
-      type: "host"
-    },
-    {
-      title: "발로란트 내전",
-      game: "발로란트",
-      date: "2023년 12월 9일",
-      type: "join"
-    },
-    {
-      title: "배그 스쿼드",
-      game: "배틀그라운드",
-      date: "2023년 12월 8일",
-      type: "join"
-    }
-  ];
 
   const handleDirectMessage = () => {
     if (!isAuthenticated) {
@@ -168,74 +139,38 @@ const UserProfile = () => {
               </Card>
             </div>
 
-            {/* 통계 정보 */}
+            {/* 최근 활동만 표시 */}
             <div className="lg:col-span-2">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                {/* 게임 통계 */}
-                <Card className="bg-white border-gray-200 shadow-sm">
-                  <CardHeader>
-                    <CardTitle className="text-gray-900">게임 통계</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">총 게임 수</span>
-                      <span className="font-medium text-gray-900">{stats.totalGames}게임</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">승률</span>
-                      <span className="font-medium text-gray-900">{stats.winRate}%</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">평균 플레이 시간</span>
-                      <span className="font-medium text-gray-900">{stats.avgPlayTime}시간</span>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* 파티 참여 통계 */}
-                <Card className="bg-white border-gray-200 shadow-sm">
-                  <CardHeader>
-                    <CardTitle className="text-gray-900">파티 활동</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">참여한 파티</span>
-                      <span className="font-medium text-gray-900">{stats.partiesJoined}개</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">호스트한 파티</span>
-                      <span className="font-medium text-gray-900">{stats.partiesHosted}개</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600">완료율</span>
-                      <span className="font-medium text-gray-900">{stats.completionRate}%</span>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
-
-              {/* 최근 활동 */}
               <Card className="bg-white border-gray-200 shadow-sm">
                 <CardHeader>
                   <CardTitle className="text-gray-900">최근 활동</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {recentActivities.map((activity, index) => (
-                      <div key={index} className="flex items-center space-x-3 py-2">
-                        <div className={`w-2 h-2 rounded-full ${activity.type === 'host' ? 'bg-green-500' : 'bg-blue-500'}`}></div>
-                        <div className="flex-1">
-                          <p className="text-sm text-gray-900">{activity.title}</p>
-                          <p className="text-xs text-gray-600">{activity.game} • {activity.date}</p>
-                        </div>
-                        <Badge 
-                          variant="secondary" 
-                          className={activity.type === 'host' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'}
-                        >
-                          {activity.type === 'host' ? '호스트' : '참여'}
-                        </Badge>
+                    <div className="flex items-center space-x-3 py-2">
+                      <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                      <div className="flex-1">
+                        <p className="text-sm text-gray-900">롤 5인 랭크</p>
+                        <p className="text-xs text-gray-600">리그 오브 레전드 • 2023년 12월 10일</p>
                       </div>
-                    ))}
+                      <Badge variant="secondary" className="bg-green-100 text-green-800">호스트</Badge>
+                    </div>
+                    <div className="flex items-center space-x-3 py-2">
+                      <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                      <div className="flex-1">
+                        <p className="text-sm text-gray-900">발로란트 내전</p>
+                        <p className="text-xs text-gray-600">발로란트 • 2023년 12월 9일</p>
+                      </div>
+                      <Badge variant="secondary" className="bg-blue-100 text-blue-800">참여</Badge>
+                    </div>
+                    <div className="flex items-center space-x-3 py-2">
+                      <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                      <div className="flex-1">
+                        <p className="text-sm text-gray-900">배그 스쿼드</p>
+                        <p className="text-xs text-gray-600">배틀그라운드 • 2023년 12월 8일</p>
+                      </div>
+                      <Badge variant="secondary" className="bg-blue-100 text-blue-800">참여</Badge>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
