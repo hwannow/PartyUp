@@ -77,12 +77,10 @@ const Index = () => {
   };
 
   const handlePasswordSubmit = () => {
-    if (passwordInput === "1234") {
-      if (selectedParty) {
-        navigate(`/chat/${selectedParty.id}`);
-        setSelectedParty(null);
-        setPasswordInput("");
-      }
+    if (selectedParty && passwordInput === selectedParty.password) {
+      navigate(`/chat/${selectedParty.id}`);
+      setSelectedParty(null);
+      setPasswordInput("");
     } else {
       alert("비밀번호가 올바르지 않습니다.");
     }
@@ -183,22 +181,13 @@ const Index = () => {
               </div>
             </div>
             
-            <div className="flex space-x-2">
-              <Button 
-                variant="outline"
-                className="border-gray-300 text-gray-700 hover:bg-gray-100"
-              >
-                <Search className="h-4 w-4 mr-2" />
-                검색
-              </Button>
-              <Button 
-                onClick={handleCreateParty}
-                className="bg-green-500 hover:bg-green-600 text-white"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                파티 만들기
-              </Button>
-            </div>
+            <Button 
+              onClick={handleCreateParty}
+              className="bg-green-500 hover:bg-green-600 text-white"
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              파티 만들기
+            </Button>
           </div>
         </div>
 

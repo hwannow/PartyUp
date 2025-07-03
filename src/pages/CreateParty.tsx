@@ -21,6 +21,7 @@ const CreateParty = () => {
   const [description, setDescription] = useState("");
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [isPrivate, setIsPrivate] = useState(false);
+  const [password, setPassword] = useState("");
   const [gameStartTime, setGameStartTime] = useState("");
 
   const genres = [
@@ -92,6 +93,11 @@ const CreateParty = () => {
       return;
     }
 
+    if (isPrivate && !password.trim()) {
+      alert("비밀방을 만들려면 비밀번호를 설정해주세요.");
+      return;
+    }
+
     if (!user) {
       alert("로그인이 필요합니다.");
       return;
@@ -111,6 +117,7 @@ const CreateParty = () => {
       maxMembers: parseInt(maxMembers),
       tags: selectedOptionNames,
       isPrivate,
+      password: isPrivate ? password : undefined,
       description,
       gameStartTime
     });
@@ -236,15 +243,35 @@ const CreateParty = () => {
               {/* 비밀방 설정 */}
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-900">파티 공개 설정</label>
-                <div className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    id="isPrivate"
-                    checked={isPrivate}
-                    onChange={(e) => setIsPrivate(e.target.checked)}
-                    className="rounded border-gray-300"
-                  />
-                  <label htmlFor="isPrivate" className="text-sm text-gray-700">비밀방으로 설정</label>
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      id="isPrivate"
+                      checked={isPrivate}
+                      onChange={(e) => {
+                        setIsPrivate(e.target.checked);
+                        if (!e.target.checked) {
+                          setPassword("");
+                        }
+                      }}
+                      className="rounded border-gray-300"
+                    />
+                    <label htmlFor="isPrivate" className="text-sm text-gray-700">비밀방으로 설정</label>
+                  </div>
+                  
+                  {isPrivate && (
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-gray-900">비밀번호</label>
+                      <Input
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        placeholder="비밀번호를 입력하세요"
+                        className="bg-white border-gray-300 text-gray-900 placeholder:text-gray-400"
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
 

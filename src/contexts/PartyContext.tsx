@@ -11,6 +11,7 @@ export interface Party {
   tags: string[];
   rating: number;
   isPrivate: boolean;
+  password?: string;
   description?: string;
   gameStartTime?: string;
 }
@@ -54,7 +55,8 @@ const initialParties: Party[] = [
     maxMembers: 5,
     tags: ["내전", "5인"],
     rating: 4.8,
-    isPrivate: true
+    isPrivate: true,
+    password: "1234"
   },
   {
     id: "3",
@@ -90,7 +92,8 @@ const initialParties: Party[] = [
     maxMembers: 8,
     tags: ["레이드", "고수"],
     rating: 4.7,
-    isPrivate: true
+    isPrivate: true,
+    password: "1234"
   },
   {
     id: "6",
