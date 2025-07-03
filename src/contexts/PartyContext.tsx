@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 export interface Party {
   id: string;
+  code: string; // 파티 식별 코드 추가
   title: string;
   game: string;
   genre: string;
@@ -18,7 +19,7 @@ export interface Party {
 
 interface PartyContextType {
   parties: Party[];
-  addParty: (party: Omit<Party, 'id' | 'members' | 'rating'>) => void;
+  addParty: (party: Omit<Party, 'id' | 'code' | 'members' | 'rating'>) => void;
   kickMember: (partyId: string, username: string) => void;
 }
 
@@ -32,9 +33,20 @@ export const useParty = () => {
   return context;
 };
 
+// 파티 코드 생성 함수
+const generatePartyCode = (): string => {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let code = '';
+  for (let i = 0; i < 6; i++) {
+    code += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return code;
+};
+
 const initialParties: Party[] = [
   {
     id: "1",
+    code: "ABC123",
     title: "롤 5인 랭크",
     game: "리그 오브 레전드",
     genre: "AOS",
@@ -47,6 +59,7 @@ const initialParties: Party[] = [
   },
   {
     id: "2",
+    code: "DEF456",
     title: "발로란트 내전",
     game: "발로란트",
     genre: "FPS",
@@ -60,6 +73,7 @@ const initialParties: Party[] = [
   },
   {
     id: "3",
+    code: "GHI789",
     title: "배그 스쿼드",
     game: "배틀그라운드",
     genre: "FPS",
@@ -72,6 +86,7 @@ const initialParties: Party[] = [
   },
   {
     id: "4",
+    code: "JKL012",
     title: "오버워치 경쟁전",
     game: "오버워치 2",
     genre: "FPS",
@@ -84,6 +99,7 @@ const initialParties: Party[] = [
   },
   {
     id: "5",
+    code: "MNO345",
     title: "로스트아크 레이드",
     game: "로스트아크",
     genre: "RPG",
@@ -97,6 +113,7 @@ const initialParties: Party[] = [
   },
   {
     id: "6",
+    code: "PQR678",
     title: "디아블로 4 쩔",
     game: "디아블로 4",
     genre: "RPG",
@@ -109,6 +126,7 @@ const initialParties: Party[] = [
   },
   {
     id: "7",
+    code: "STU901",
     title: "마인크래프트 서버",
     game: "마인크래프트",
     genre: "샌드박스",
@@ -121,6 +139,7 @@ const initialParties: Party[] = [
   },
   {
     id: "8",
+    code: "VWX234",
     title: "스타크래프트 2 래더",
     game: "스타크래프트 2",
     genre: "RTS",
@@ -133,6 +152,7 @@ const initialParties: Party[] = [
   },
   {
     id: "9",
+    code: "YZA567",
     title: "FIFA 온라인 4",
     game: "FIFA 온라인 4",
     genre: "스포츠",
@@ -145,6 +165,7 @@ const initialParties: Party[] = [
   },
   {
     id: "10",
+    code: "BCD890",
     title: "카트라이더 러쉬플러스",
     game: "카트라이더 러쉬플러스",
     genre: "레이싱",
@@ -157,6 +178,7 @@ const initialParties: Party[] = [
   },
   {
     id: "11",
+    code: "EFG123",
     title: "리그 오브 레전드 칼바람",
     game: "리그 오브 레전드",
     genre: "AOS",
@@ -169,6 +191,7 @@ const initialParties: Party[] = [
   },
   {
     id: "12",
+    code: "HIJ456",
     title: "어몽어스 추리",
     game: "어몽어스",
     genre: "파티",
@@ -181,6 +204,7 @@ const initialParties: Party[] = [
   },
   {
     id: "13",
+    code: "KLM789",
     title: "포트나이트 스쿼드",
     game: "포트나이트",
     genre: "FPS",
@@ -200,10 +224,11 @@ interface PartyProviderProps {
 export const PartyProvider: React.FC<PartyProviderProps> = ({ children }) => {
   const [parties, setParties] = useState<Party[]>(initialParties);
 
-  const addParty = (newParty: Omit<Party, 'id' | 'members' | 'rating'>) => {
+  const addParty = (newParty: Omit<Party, 'id' | 'code' | 'members' | 'rating'>) => {
     const party: Party = {
       ...newParty,
       id: Date.now().toString(),
+      code: generatePartyCode(),
       members: 3, // 호스트 포함 3명으로 하드코딩 (호스트 기능 확인을 위해)
       rating: 4.0
     };

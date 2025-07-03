@@ -1,11 +1,10 @@
-
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Send, Users, Check, X } from "lucide-react";
+import { ArrowLeft, Send, Users, Check, X, Copy } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useParty } from "@/contexts/PartyContext";
@@ -37,6 +36,7 @@ const Chat = () => {
   // 파티 정보 찾기
   const partyInfo = parties.find(p => p.id === partyId) || {
     id: partyId,
+    code: "ABC123",
     title: "랭크 같이 가실분~",
     game: "리그 오브 레전드",
     host: user?.displayName || "김은지",
@@ -126,6 +126,16 @@ const Chat = () => {
     setIsReady(!isReady);
   };
 
+  const handleCopyCode = async () => {
+    try {
+      await navigator.clipboard.writeText(partyInfo.code);
+      alert("파티 코드가 복사되었습니다!");
+    } catch (err) {
+      console.error('코드 복사 실패:', err);
+      alert("코드 복사에 실패했습니다.");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -164,6 +174,24 @@ const Chat = () => {
               <CardTitle className="text-gray-900">파티 정보</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
+              {/* 파티 코드 */}
+              <div>
+                <p className="text-sm text-gray-600">파티 코드</p>
+                <div className="flex items-center space-x-2 mt-1">
+                  <code className="bg-gray-100 px-2 py-1 rounded text-sm font-mono text-gray-900">
+                    {partyInfo.code}
+                  </code>
+                  <Button
+                    onClick={handleCopyCode}
+                    size="sm"
+                    variant="outline"
+                    className="h-7 px-2"
+                  >
+                    <Copy className="h-3 w-3" />
+                  </Button>
+                </div>
+              </div>
+
               <div>
                 <p className="text-sm text-gray-600">호스트</p>
                 <div className="flex items-center space-x-2 mt-1">

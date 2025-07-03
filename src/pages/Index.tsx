@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -45,7 +44,13 @@ const Index = () => {
     const genreFilter = selectedGenre === "전체" || party.genre === selectedGenre;
     const gameFilter = selectedGame === "전체" || party.game === selectedGame;
     const broadcastFilter = !showBroadcast || party.tags.includes("방송");
-    return searchRegex.test(party.title) && genreFilter && gameFilter && broadcastFilter;
+    
+    // 검색어가 파티 제목, 파티 코드와 일치하는지 확인
+    const searchFilter = searchTerm === "" || 
+      searchRegex.test(party.title) || 
+      party.code.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    return searchFilter && genreFilter && gameFilter && broadcastFilter;
   });
 
   const handleCreateParty = () => {
@@ -170,15 +175,12 @@ const Index = () => {
         <div className="mb-8">
           <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
             <div className="flex-1 max-w-md">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                <Input
-                  placeholder="파티 검색..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 bg-white border-gray-300 text-gray-900 placeholder:text-gray-400"
-                />
-              </div>
+              <Input
+                placeholder="파티 검색 또는 코드 입력..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="bg-white border-gray-300 text-gray-900 placeholder:text-gray-400"
+              />
             </div>
             
             <Button 
@@ -315,7 +317,11 @@ const Index = () => {
                   
                   <div className="flex flex-wrap gap-1">
                     {party.tags.map((tag, index) => (
-                      <Badge key={index} variant="secondary" className="bg-gray-100 text-gray-700 text-xs">
+                      <Badge 
+                        key={index} 
+                        variant="secondary" 
+                        className="bg-gray-100 text-gray-700 text-xs hover:bg-gray-100"
+                      >
                         {tag}
                       </Badge>
                     ))}

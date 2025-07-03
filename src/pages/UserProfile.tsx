@@ -97,7 +97,11 @@ const UserProfile = () => {
                     <h3 className="text-sm font-medium text-gray-900 mb-2">선호 게임</h3>
                     <div className="flex flex-wrap gap-1">
                       {userData.preferredGames.map((game, index) => (
-                        <Badge key={index} variant="secondary" className="bg-green-100 text-green-800 text-xs">
+                        <Badge 
+                          key={index} 
+                          variant="secondary" 
+                          className="bg-green-100 text-green-800 text-xs hover:bg-green-100"
+                        >
                           {game}
                         </Badge>
                       ))}
